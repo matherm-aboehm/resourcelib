@@ -121,7 +121,8 @@ namespace Vestris.ResourceLib
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(string.Format("{0}BEGIN", new String(' ', indent)));
-            foreach(VarTable var in _vars.Values)
+            sb.AppendLine(string.Format("{0}BLOCK \"{1}\"", new String(' ', indent + 1), _key));
+            foreach (VarTable var in _vars.Values)
             {
                 sb.Append(var.ToString(indent + 1));
             }
