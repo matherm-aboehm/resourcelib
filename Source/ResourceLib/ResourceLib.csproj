@@ -17,6 +17,8 @@
     <Authors>dblock, icnocop, thoemmi</Authors>
     <AssemblyName>Vestris.ResourceLib</AssemblyName>
     <RootNamespace>Vestris.ResourceLib</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
