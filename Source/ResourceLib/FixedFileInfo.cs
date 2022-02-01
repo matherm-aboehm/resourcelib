@@ -160,7 +160,7 @@ namespace Vestris.ResourceLib
                 _fixedfileinfo.dwFileFlags == 0 ? "0" : ResourceUtil.FlagsToString<Winver.FileFlags>(
                     _fixedfileinfo.dwFileFlags)));
             sb.AppendLine(string.Format("FILEOS {0}",
-                ResourceUtil.FlagsToString<Winver.FileOs>(_fixedfileinfo.dwFileFlags)));
+                ResourceUtil.FlagsToString<Winver.FileOs>(_fixedfileinfo.dwFileOS)));
             sb.AppendLine(string.Format("FILETYPE {0}",
                 ResourceUtil.FlagsToString<Winver.FileType>(_fixedfileinfo.dwFileType)));
             sb.AppendLine(string.Format("FILESUBTYPE {0}",

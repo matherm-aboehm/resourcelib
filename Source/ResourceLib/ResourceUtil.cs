@@ -61,7 +61,7 @@ namespace Vestris.ResourceLib
             if (pos % 4 != 0)
             {
                 long count = 4 - pos % 4;
-                Pad(w, (UInt16) count);
+                Pad(w, (UInt16)count);
                 pos += count;
             }
 
@@ -75,7 +75,7 @@ namespace Vestris.ResourceLib
         /// <returns>High WORD.</returns>
         internal static UInt16 HiWord(UInt32 value)
         {
-            return (UInt16) ((value & 0xFFFF0000) >> 16);
+            return (UInt16)((value & 0xFFFF0000) >> 16);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Vestris.ResourceLib
         /// <returns>High WORD.</returns>
         internal static UInt16 LoWord(UInt32 value)
         {
-            return (UInt16) (value & 0x0000FFFF);
+            return (UInt16)(value & 0x0000FFFF);
         }
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace Vestris.ResourceLib
         internal static void WriteAt(BinaryWriter w, long value, long address)
         {
             long cur = w.BaseStream.Position;
-            w.Seek((int) address, SeekOrigin.Begin);
-            w.Write((UInt16) value);
-            w.Seek((int) cur, SeekOrigin.Begin);
+            w.Seek((int)address, SeekOrigin.Begin);
+            w.Write((UInt16)value);
+            w.Seek((int)cur, SeekOrigin.Begin);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Vestris.ResourceLib
         internal static long Pad(BinaryWriter w, UInt16 len)
         {
             while (len-- > 0)
-                w.Write((byte) 0);
+                w.Write((byte)0);
             return w.BaseStream.Position;
         }
 
@@ -146,7 +146,7 @@ namespace Vestris.ResourceLib
         /// <returns>Microsoft language ID.</returns>
         public static UInt16 MAKELANGID(int primary, int sub)
         {
-            return (UInt16) ((((UInt16)sub) << 10) | ((UInt16)primary));
+            return (UInt16)((((UInt16)sub) << 10) | ((UInt16)primary));
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Vestris.ResourceLib
         /// <returns>primary language ID (low-order 10 bits)</returns>
         public static UInt16 PRIMARYLANGID(UInt16 lcid)
         {
-            return (UInt16) (((UInt16)lcid) & 0x3ff);
+            return (UInt16)(((UInt16)lcid) & 0x3ff);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Vestris.ResourceLib
         /// <returns>Sublanguage ID (high-order 6 bits).</returns>
         public static UInt16 SUBLANGID(UInt16 lcid)
         {
-            return (UInt16) (((UInt16)lcid) >> 10);
+            return (UInt16)(((UInt16)lcid) >> 10);
         }
 
         /// <summary>
@@ -191,19 +191,32 @@ namespace Vestris.ResourceLib
         /// </summary>
         /// <typeparam name="T">Flag collection type.</typeparam>
         /// <param name="flagValue">Flag value.</param>
+        /// <param name="addRemainingValue">Add remaining flag value to collection.</param>
         /// <returns>Collection of flags.</returns>
-        internal static List<string> FlagsToList<T>(UInt32 flagValue)
+        internal static List<string> FlagsToList<T>(UInt32 flagValue, bool addRemainingValue = false)
         {
             List<string> flags = new List<string>();
 
+            UInt32 remainingFlagValue = flagValue;
             foreach (T f in Enum.GetValues(typeof(T)))
             {
                 UInt32 f_ui = Convert.ToUInt32(f);
-                if ((flagValue & f_ui) > 0 || flagValue == f_ui)
+                if (flagValue == f_ui) // perfect match => return only this flag/value
+                {
+                    if (flags.Count != 0)
+                        flags.Clear();
+                    flags.Add(f.ToString());
+                    remainingFlagValue = 0;
+                    break;
+                }
+                else if ((flagValue & f_ui) == f_ui) // only bit pattern match => add to collection
                 {
                     flags.Add(f.ToString());
+                    remainingFlagValue &= ~f_ui;
                 }
             }
+            if (remainingFlagValue != 0 && addRemainingValue)
+                flags.Add(string.Format("0x{0:x}", remainingFlagValue));
 
             return flags;
         }
@@ -216,8 +229,7 @@ namespace Vestris.ResourceLib
         /// <returns>String representation of flags in the f1 | ... | fn format.</returns>
         internal static string FlagsToString<T>(UInt32 flagValue)
         {
-            List<string> flags = new List<string>();
-            flags.AddRange(FlagsToList<T>(flagValue));
+            List<string> flags = FlagsToList<T>(flagValue, true);
             return String.Join(" | ", flags.ToArray());
         }
     }
