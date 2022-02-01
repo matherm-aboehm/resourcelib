@@ -3,7 +3,9 @@
     <TargetFrameworks>net20;net35;net40;net45;netstandard2.0</TargetFrameworks>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GeneratePackageOnBuild Condition="'$(APPVEYOR)' != '' And '$(APPVEYOR)'">true</GeneratePackageOnBuild>
+    <!-- Workaround for issues https://github.com/dotnet/sdk/issues/12160, https://github.com/dotnet/sdk/issues/10335 -->
+    <GeneratePackageOnBuild Condition="('$(APPVEYOR)' != '' And '$(APPVEYOR)') Or '$(_IsPacking)' != 'true'">true</GeneratePackageOnBuild>
+    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
 
     <PackageId>Vestris.ResourceLib</PackageId>
     <PackageProjectUrl>https://github.com/resourcelib/resourcelib</PackageProjectUrl>
@@ -15,6 +17,7 @@
     <Authors>dblock, icnocop, thoemmi</Authors>
     <AssemblyName>Vestris.ResourceLib</AssemblyName>
     <RootNamespace>Vestris.ResourceLib</RootNamespace>
+    <IncludeSymbols>true</IncludeSymbols>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>resourcelib-logo.png</PackageIcon>
