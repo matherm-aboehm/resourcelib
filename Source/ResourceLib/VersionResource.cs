@@ -225,7 +225,7 @@ namespace Vestris.ResourceLib
             sb.AppendLine("BEGIN");
             foreach (DictionaryEntry dictionaryEntry in _resources)
             {
-                sb.Append(((ResourceTableHeader)dictionaryEntry.Value).ToString(1));
+                sb.Append(((ResourceTableHeader)dictionaryEntry.Value).ToString(4));
             }
             sb.AppendLine("END");
             return sb.ToString();

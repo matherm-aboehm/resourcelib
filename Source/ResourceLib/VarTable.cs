@@ -65,7 +65,7 @@ namespace Vestris.ResourceLib
 
             while (pVar.ToInt64() < (lpRes.ToInt64() + _header.wLength))
             {
-                Kernel32.VAR_HEADER var = (Kernel32.VAR_HEADER) Marshal.PtrToStructure(
+                Kernel32.VAR_HEADER var = (Kernel32.VAR_HEADER)Marshal.PtrToStructure(
                     pVar, typeof(Kernel32.VAR_HEADER));
                 _languages.Add(var.wLanguageIDMS, var.wCodePageIBM);
                 pVar = new IntPtr(pVar.ToInt64() + Marshal.SizeOf(var));
@@ -89,9 +89,9 @@ namespace Vestris.ResourceLib
             while (languagesEnum.MoveNext())
             {
                 // id
-                w.Write((UInt16) languagesEnum.Current.Key);
+                w.Write((UInt16)languagesEnum.Current.Key);
                 // code page
-                w.Write((UInt16) languagesEnum.Current.Value);
+                w.Write((UInt16)languagesEnum.Current.Value);
             }
 
             ResourceUtil.WriteAt(w, w.BaseStream.Position - valuePos, headerPos + 2);
@@ -124,14 +124,18 @@ namespace Vestris.ResourceLib
         public override string ToString(int indent)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(string.Format("{0}BEGIN", new String(' ', indent)));
             Dictionary<UInt16, UInt16>.Enumerator languagesEnumerator = _languages.GetEnumerator();
-            while (languagesEnumerator.MoveNext())
+            if (languagesEnumerator.MoveNext())
             {
-                sb.AppendLine(string.Format("{0}VALUE \"Translation\", 0x{1:x}, 0x{2:x}", 
-                    new String(' ', indent + 1), languagesEnumerator.Current.Key, languagesEnumerator.Current.Value));
+                sb.Append(string.Format("{0}VALUE \"Translation\", 0x{1:x}, 0x{2:x}",
+                    new String(' ', indent + 4), languagesEnumerator.Current.Key, languagesEnumerator.Current.Value));
+                while (languagesEnumerator.MoveNext())
+                {
+                    sb.Append(string.Format(", 0x{0:x}, 0x{1:x}",
+                        languagesEnumerator.Current.Key, languagesEnumerator.Current.Value));
+                }
+                sb.AppendLine();
             }
-            sb.AppendLine(string.Format("{0}END", new String(' ', indent)));
             return sb.ToString();
         }
     }
