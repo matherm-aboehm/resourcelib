@@ -120,11 +120,11 @@ namespace Vestris.ResourceLib
         public override string ToString(int indent)
         {
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine(string.Format("{0}BLOCK \"{1}\"", new String(' ', indent), _key));
             sb.AppendLine(string.Format("{0}BEGIN", new String(' ', indent)));
-            sb.AppendLine(string.Format("{0}BLOCK \"{1}\"", new String(' ', indent + 1), _key));
             foreach (VarTable var in _vars.Values)
             {
-                sb.Append(var.ToString(indent + 1));
+                sb.Append(var.ToString(indent + 4));
             }
             sb.AppendLine(string.Format("{0}END", new String(' ', indent)));
             return sb.ToString();

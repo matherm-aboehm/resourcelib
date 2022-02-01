@@ -164,16 +164,14 @@ namespace Vestris.ResourceLib
         public override string ToString(int indent)
         {
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine(string.Format("{0}BLOCK \"{1}\"", new String(' ', indent), _key));
             sb.AppendLine(string.Format("{0}BEGIN", new String(' ', indent)));
-            sb.AppendLine(string.Format("{0}BLOCK \"{1}\"", new String(' ', indent + 1), _key));
-            sb.AppendLine(string.Format("{0}BEGIN", new String(' ', indent + 1)));
             foreach (StringTableEntry stringResource in _strings.Values)
             {
                 sb.AppendLine(string.Format("{0}VALUE \"{1}\", \"{2}\"",
-                    new String(' ', indent + 2),
+                    new String(' ', indent + 4),
                     stringResource.Key, stringResource.StringValue));
             }
-            sb.AppendLine(string.Format("{0}END", new String(' ', indent + 1)));
             sb.AppendLine(string.Format("{0}END", new String(' ', indent)));
             return sb.ToString();
         }
